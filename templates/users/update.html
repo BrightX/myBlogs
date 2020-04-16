@@ -1,0 +1,126 @@
+{% load static %}
+<!doctype html>
+<html lang="zh-hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>修改个人信息 - {{ request.user }}</title>
+    <link rel="stylesheet" href="{% static 'layui/css/layui.css' %}">
+    <script src="{% static 'jquery/3.3.1/jquery.min.js' %}"></script>
+    <script src="{% static 'js/ajax_csrf.js' %}"></script>
+    <script src="{% static 'layui/layui.js' %}"></script>
+</head>
+<body>
+
+<form action="{% url 'users:update' %}" method="post" class="layui-form">
+    {% csrf_token %}
+    <div class="layui-form-item">
+        <label class="layui-form-label" for="id_nickname">昵称：</label>
+        <div class="layui-input-inline">
+            <input type="text" name="nickname" id="id_nickname" maxlength="15" required lay-verify="required"
+                   placeholder="请输入昵称" value="{{ request.user.userinfo.nickname }}"
+                   autocomplete="off" class="layui-input">
+        </div>
+        <div class="layui-form-mid layui-word-aux">&nbsp;</div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">性别：</label>
+        <div class="layui-input-block">
+            <label>
+                <input type="radio" name="gender" value=1 title="男"{% if request.user.userinfo.gender %}
+                       checked{% endif %}>
+            </label>
+            <label>
+                <input type="radio" name="gender" value=0 title="女"{% if not request.user.userinfo.gender %}
+                       checked{% endif %}>
+            </label>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="change">修&nbsp;改</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重&nbsp;置</button>
+        </div>
+    </div>
+</form>
+
+<form action="{% url 'users:password' %}" method="post" class="layui-form">
+    {% csrf_token %}
+    <div class="layui-form-item">
+        <label class="layui-form-label" for="old_password">旧密码：</label>
+        <div class="layui-input-inline">
+            <input type="password" name="old_password" maxlength="15" required lay-verify="required"
+                   placeholder="请输入旧密码" lay-type="pass"
+                   autocomplete="off" class="layui-input" id="old_password">
+        </div>
+        <div class="layui-form-mid layui-word-aux">&nbsp;</div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" for="new_password">新密码：</label>
+        <div class="layui-input-inline">
+            <input type="password" name="new_password" maxlength="15" required lay-verify="required|pass"
+                   placeholder="请输入新密码" lay-type="pass"
+                   autocomplete="off" class="layui-input" id="new_password">
+        </div>
+        <div class="layui-form-mid layui-word-aux">&nbsp;</div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" for="password_1">确认密码：</label>
+        <div class="layui-input-inline">
+            <input type="password" maxlength="15" required lay-verify="required|confirmPass"
+                   placeholder="请确认密码"
+                   autocomplete="off" class="layui-input" id="password_1">
+        </div>
+        <div class="layui-form-mid layui-word-aux">&nbsp;</div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="change">修改密码</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重&nbsp;置</button>
+        </div>
+    </div>
+</form>
+
+<script>
+    let element, layer, form;
+    layui.use(['element', 'layer', 'form',], function () {
+        element = layui.element;
+        element.init();
+        layer = layui.layer;
+        form = layui.form;
+        form.on('submit(change)', function (data) {
+            $.ajax({
+                url: data.form.action,
+                type: "post",
+                data: data.field,
+                success: function (data) {
+                    if (data["code"] === 200) {
+                        layer.msg(data["msg"]);
+                        setTimeout(function () {
+                            window.location = data["next"];
+                        }, 2 * 1000);
+                    } else {
+                        layer.msg(data["msg"]);
+                    }
+                }
+            });
+            return false;
+        });
+
+        form.verify({
+            pass: [/(.+){6,15}$/, '密码必须6到15位'],
+            confirmPass: function (value) {
+                if ($('input[name=new_password]').val() !== value)
+                    return '两次密码输入不一致！';
+            },
+        });
+    });
+</script>
+</body>
+</html>

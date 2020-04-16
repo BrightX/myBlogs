@@ -1,0 +1,158 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="UTF-8">
+    <title>注册新用户</title>
+    <link rel="stylesheet" href="{% static 'layui/css/layui.css' %}">
+    <script src="{% static 'jquery/3.3.1/jquery.min.js' %}"></script>
+    <script src="{% static 'layui/layui.js' %}"></script>
+</head>
+<body>
+<div style="margin: 10px auto; width: max-content">
+    <form method="post" action="{% url 'users:join' %}" class="layui-form" style="margin-top: 20px">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ next }}">
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="id_username">用户ID：</label>
+            <div class="layui-input-inline">
+                <input type="text" name="username" id="id_username" maxlength="10" required
+                       lay-verify="required|isExist"
+                       placeholder="请输入用户ID"
+                       autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">&nbsp;</div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="id_nickname">昵称：</label>
+            <div class="layui-input-inline">
+                <input type="text" name="nickname" id="id_nickname" maxlength="15" required lay-verify="required"
+                       placeholder="请输入昵称"
+                       autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">&nbsp;</div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="password">设置密码：</label>
+            <div class="layui-input-inline">
+                <input type="password" name="password" maxlength="15" required lay-verify="required|pass"
+                       placeholder="请输入密码" lay-type="pass"
+                       autocomplete="off" class="layui-input" id="password">
+            </div>
+            <div class="layui-form-mid layui-word-aux">&nbsp;</div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="password_1">确认密码：</label>
+            <div class="layui-input-inline">
+                <input type="password" maxlength="15" required lay-verify="required|confirmPass"
+                       placeholder="请确认密码"
+                       autocomplete="off" class="layui-input" id="password_1">
+            </div>
+            <div class="layui-form-mid layui-word-aux">&nbsp;</div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">性别：</label>
+            <div class="layui-input-block">
+                <label>
+                    <input type="radio" name="gender" value=1 title="男" checked>
+                </label>
+                <label>
+                    <input type="radio" name="gender" value=0 title="女">
+                </label>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="captcha_1">验证码：</label>
+            <div class="layui-input-inline">
+                <input id="captcha_0" name="captcha_0" type="hidden" value="{{ captcha_hashkey }}"/>
+                <input type="text" name="captcha_1" maxlength="20" required lay-verify="required"
+                       placeholder="请输入验证码" spellcheck="false" autocapitalize="off" autocorrect="off"
+                       autocomplete="off" class="layui-input" id="captcha_1">
+            </div>
+            <div class="layui-form-mid" style="padding: 0 !important;">
+                <a href="javascript:" title="点击一下刷新验证码"><img src="{{ captcha_img_url }}" alt="验证码" class="captcha"/></a>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="formSubmit">注&nbsp;册</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重&nbsp;置</button>
+            </div>
+        </div>
+
+    </form>
+    去<a href="{% url 'users:login' %}">登录</a>
+</div>
+
+<script src="{% static 'js/ajax_csrf.js' %}"></script>
+
+<script>
+    let element, layer, form;
+    layui.use(['element', 'layer', 'form',], function () {
+        element = layui.element;
+        element.init();
+        layer = layui.layer;
+        form = layui.form;
+        form.on('submit(formSubmit)', function (data) {
+            $.ajax({
+                url: data.form.action,
+                type: "post",
+                data: data.field,
+                success: function (data) {
+                    if (data["code"] === 200) {
+                        layer.msg(data["msg"]);
+                        setTimeout(function () {
+                            window.location = data["next"];
+                        }, 2 * 1000);
+                    } else {
+                        layer.msg(data["msg"]);
+                        $.getJSON("{% url 'captcha-refresh' %}", function (result) {
+                            $('.captcha').attr('src', result['image_url']);
+                            $('#captcha_0').val(result['key'])
+                        });
+                    }
+                }
+            });
+            return false;
+        });
+
+        form.verify({
+            pass: [/(.+){6,15}$/, '密码必须6到15位'],
+            confirmPass: function (value) {
+                if ($('input[name=password]').val() !== value)
+                    return '两次密码输入不一致！';
+            },
+            isExist: function (value) {
+                let data = false;
+                $.ajax({
+                    url: "{% url 'users:isExist' %}",
+                    contentType: "application/json",
+                    dataType: 'json',
+                    type: "get",
+                    async: false,
+                    data: {"username": value},
+                    success: function (result) {
+                        data = result['isExist'];
+                    },
+                });
+                if (data) {
+                    return '该用户ID已存在';
+                }
+            }
+        });
+    });
+    $('.captcha').click(function () {
+        $.getJSON("{% url 'captcha-refresh' %}", function (result) {
+            $('.captcha').attr('src', result['image_url']);
+            $('#captcha_0').val(result['key'])
+        });
+    });
+</script>
+</body>
+</html>

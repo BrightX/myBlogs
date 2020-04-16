@@ -1,0 +1,119 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="UTF-8">
+    <title>博客详情</title>
+    <script src="{% static 'jquery/3.3.1/jquery.min.js' %}"></script>
+</head>
+<body>
+<a name="top"></a>
+{{ user }}/{{ blog }}
+<br>
+{{ user | add:blog }}
+<br>
+<div>文章标题 title</div>
+<div>文章内容 content</div>
+<div>文章的标签 Article tags</div>
+<div>文章分类 Article Category</div>
+<div>文章的评论 Comment on article</div>
+<div>评论的回复 Comment reply</div>
+
+<div id="page_begin_html">
+    <script type="text/javascript">
+        /* 鼠标特效 */
+        let a_idx = 0;
+        jQuery(document).ready(function ($) {
+            $("body").click(function (e) {
+                let a = ["❤JAVA❤", "❤C++❤", "❤C❤", "❤PYTHON❤", "❤GO❤", "❤LINUX❤", "❤HTML❤", "❤CSS❤", "❤JS❤", "❤PYTORCH❤", "❤MXNET❤", "❤TF❤"];
+                let $i = $("<span></span>").text(a[a_idx]);
+                a_idx = (a_idx + 1) % a.length;
+                let x = e.pageX,
+                    y = e.pageY;
+                $i.css({
+                    "z-index": 99999999,
+                    "top": y - 20,
+                    "left": x,
+                    "position": "absolute",
+                    "font-weight": "bold",
+                    "color": "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+                });
+                $("body").append($i);
+                $i.animate({
+                        "top": y - 180,
+                        "opacity": 0
+                    },
+                    1500,
+                    function () {
+                        $i.remove();
+                    });
+            });
+        });
+    </script>
+    <div id="page_end_html">
+        <script src="https://eqcn.ajz.miesnfu.com/wp-content/plugins/wp-3d-pony/live2dw/lib/L2Dwidget.min.js"></script>
+    </div>
+    <script>
+        L2Dwidget.init({
+            "model": {
+                jsonPath: "https://unpkg.com/live2d-widget-model-hijiki/assets/hijiki.model.json",
+                "scale": 1
+            },
+            "display": {
+                "position": "right",
+                "width": 100,
+                "height": 200,
+                "hOffset": -17,
+                "vOffset": -10
+            },
+            "mobile": {
+                "show": true,
+                "scale": 0.5
+            },
+            "react": {
+                "opacityDefault": 0.7,
+                "opacityOnHover": 0.3
+            }
+        });
+    </script>
+    <script type="text/javascript">
+        window.onload = function () {
+            const minSize = 10; //最小字体
+            const maxSize = 20;//最大字体
+            let newOne = 600; //生成雪花间隔
+            let flakColor = "#f5f5f5fa"; //雪花颜色
+            let flak = $("<div></div>").css({position: "absolute", "top": "0px"}).html("✽");//定义一个雪花
+            let dhight = $(window).height(); //定义视图高度
+            let dw = $(window).width() - 80; //定义视图宽度
+            setInterval(function () {
+                let sizeflak = minSize + Math.random() * maxSize; //产生大小不等的雪花
+                let startLeft = Math.random() * dw; //雪花生成是随机的left值
+                let startOpacity = 0.7 + Math.random() * 0.3; //随机透明度
+                let endTop = dhight - 100; //雪花停止top的位置
+                let endLeft = Math.random() * dw; //雪花停止的left位置
+                let durationfull = 5000 + Math.random() * 3000; //雪花飘落速度不同
+                flak.clone().appendTo($("body")).css({
+                    "left": startLeft,
+                    "opacity": startOpacity,
+                    "font-size": sizeflak,
+                    "color": flakColor
+                }).animate({
+                    "top": endTop,
+                    "left": endLeft,
+                    "apacity": 0.1
+                }, durationfull, function () {
+                    $(this).remove()
+                });
+            }, newOne);
+        }
+    </script>
+    <link type="text/css" rel="stylesheet" href="https://files.cnblogs.com/files/hafiz/feedback.css">
+</div>
+<div id="live2d-widget">
+    <canvas id="live2dcanvas" width="200" height="400"
+            style="position: fixed; opacity: 0.7; right: -17px; bottom: -10px; z-index: 99999; pointer-events: none;"></canvas>
+</div>
+<a href="#top"><img id="mypic" src="https://images.cnblogs.com/cnblogs_com/xiximayou/1643158/t_200207035556top.png"
+                    alt=""></a>
+</body>
+</html>

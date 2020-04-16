@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block title %}首页{% endblock title %}
+{% block content %}
+    <div class="layui-tab-content">
+        <!-- 内容主体区域 -->
+        <div style="padding: 15px;">内容主体区域</div>
+        <a href="{% url 'blogs:blog_create' %}">写博客</a>
+    </div>
+{% endblock content %}

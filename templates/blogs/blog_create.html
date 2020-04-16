@@ -1,0 +1,191 @@
+{% load static %}
+<!doctype html>
+<html lang="zh-hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>写博客</title>
+    <script src="{% static 'jquery/3.3.1/jquery.min.js' %}"></script>
+    <script src="{% static 'js/ajax_csrf.js' %}"></script>
+    <script src="{% static 'layui/layui.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'layui/css/layui.css' %}">
+    <script src="{% static 'editor.md/editormd.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'editor.md/css/editormd.min.css' %}">
+    <style>
+        html, body {
+            height: 100%;
+            min-width: 512px;
+        }
+
+        body {
+            background-color: #f4f4f4;
+            color: #0C3C26;
+        }
+
+        ul li, ol li {
+            list-style: unset;
+        }
+
+        ::selection {
+            /*设置选择文本颜色*/
+            /*background: #5FB878;*/
+            /*color: #fff;*/
+
+            background: #C9F0DD;
+
+            /*background: #D9F0FF;*/
+        }
+
+        /*修改滚动条样式*/
+        body::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgb(239, 239, 239);
+            border-radius: 2px;
+        }
+
+        body::-webkit-scrollbar-thumb {
+            background: #cecece;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #bfbfbf;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            /*background: #36ff85;*/
+            background: #009688;
+        }
+
+        ::-webkit-scrollbar-corner {
+            background: #bfbfbf;
+        }
+    </style>
+    <style>
+
+        .input-title {
+            width: 100%;
+            padding: 8px;
+            font-size: 18px;
+            line-height: 24px;
+            background-color: #fff;
+            border: 0;
+            border-radius: 4px;
+            overflow: visible;
+        }
+
+        .input-box {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            margin: 0 14px 0 9px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #fff;
+        }
+
+        .input-num {
+            display: flex;
+            float: right;
+            line-height: 40px;
+            font-size: 18px;
+            margin-right: 8px;
+        }
+
+        .user-box {
+            position: relative;
+            margin-left: 20px;
+            margin-top: 4px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+<div style="width: 100%;height: 56px;background-color: #f3f3f3;overflow: inherit;
+    align-items: center;display: flex;">
+    <div style="display: inline-block;padding-left: 20px;font-size: 22px;color: #01aaED"><label for="id_title">Markdown</label></div>
+    <div class="input-box">
+        <input type="text" maxlength="100" placeholder="输入文章标题" class="input-title" id="id_title">
+        <span class="input-num">
+            <span>0</span>/100
+        </span>
+    </div>
+
+    <div style="display: flex; flex-direction: row;padding-right: 32px">
+        <button class="layui-btn layui-btn-primary">保存草稿</button>
+        <button class="layui-btn" id="id_submit">发布文章</button>
+        <div class="user-box">
+            <i class="layui-icon layui-icon-username" style="font-size: 26px"></i>
+        </div>
+    </div>
+</div>
+<div style="width: 100%;height: calc(100% - 73px)">
+    <div id="editor"></div>
+</div>
+
+<div style="display: none">
+    <div id="summit-body">
+        提交内容
+    </div>
+</div>
+{# TODO 博客提交 #}
+<script>
+    $(".input-title").on("input", function () {
+        $(".input-num").children()[0].innerText = $(".input-title").val().length;
+    });
+</script>
+<script type="text/javascript">
+    $(function () {
+        editormd("editor", {
+            width: "calc(100% - 2px)",
+            height: "100%",
+            markdown: "### 在这里开始书写华章，，，",
+            path: "{% static 'editor.md/lib' %}/",
+            emoji: true,
+            tex: true,
+            flowChart: true,
+            sequenceDiagram: true,
+            taskList: true,
+            tocm: true,
+            htmlDecode: true, // Decode all html tags & attributes
+            // Filter tags/attributes expression : tagName,tagName,...|attrName,attrName,...
+            //htmlDecode: "style,script,iframe,sub,sup|on*"  // Filter tags, and all on* attributes
+            //htmlDecode : "style,script,iframe,sub,sup|*"    // Filter tags, and all attributes
+            //htmlDecode : "style,script,iframe,sub,sup,embed|onclick,title,onmouseover,onmouseout,style" // Filter tags, and your custom attributes
+        });
+        editormd.katexURL = {
+            js: "https://cdn.bootcss.com/KaTeX/0.11.1/katex.min",  // default: //cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min
+            css: "https://cdn.bootcss.com/KaTeX/0.11.1/katex.min"   // default: //cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min
+        };
+    });
+</script>
+<script>
+    let layer;
+    layui.use('layer', function () {
+        layer = layui.layer;
+        $('#id_submit').on('click', function () {
+            layer.open({
+                title: '在线调试'
+                , type: 1
+                , area: ['500px', '600px']
+                , content: $('#summit-body').innerHTML
+            });
+        });
+    });
+
+</script>
+
+</body>
+</html>

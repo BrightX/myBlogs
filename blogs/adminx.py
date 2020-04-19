@@ -30,7 +30,7 @@ class CommentAdmin:
     list_display_links = ('id', 'user', 'article', 'parent')
 
 
-class GlobalSetting(object):
+class GlobalSetting:
     """全局设置，最好放到adminx.py开头位置 """
 
     # 设置base_site.html的Title
@@ -50,7 +50,7 @@ class GlobalSetting(object):
     # https://v3.bootcss.com/components/
 
 
-class ThemeSetting(object):
+class ThemeSetting:
     """主题设置"""
     enable_themes = True  # 使用主题
     use_bootswatch = True  # bootswatch是一款基于bootstrap的汇集了多种风格的前端UI解决方案

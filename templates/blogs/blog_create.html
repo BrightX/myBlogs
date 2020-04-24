@@ -111,11 +111,41 @@
             margin-right: 10px;
         }
     </style>
+
+    <style>
+        .form-native {
+            height: 36px;
+            line-height: 36px;
+            background: #fff6e5;
+            border-radius: 4px;
+            font-size: 12px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            color: #e33e33;
+            display: flex;
+            align-items: center;
+        }
+
+        svg.icon {
+            width: 1em;
+            height: 1em;
+            fill: currentColor;
+        }
+
+        .form-native svg {
+            width: 14px;
+            height: 14px;
+            margin-left: 13px;
+            margin-right: 6px;
+        }
+
+    </style>
 </head>
 <body>
 <div style="width: 100%;height: 56px;background-color: #f3f3f3;overflow: inherit;
     align-items: center;display: flex;">
-    <div style="display: inline-block;padding-left: 20px;font-size: 22px;color: #01aaED"><label for="id_title">Markdown</label></div>
+    <div style="display: inline-block;padding-left: 20px;font-size: 22px;color: #01aaED"><label
+            for="id_title">Markdown</label></div>
     <div class="input-box">
         <input type="text" maxlength="100" placeholder="输入文章标题" class="input-title" id="id_title">
         <span class="input-num">
@@ -135,9 +165,23 @@
     <div id="editor"></div>
 </div>
 
-<div style="display: none">
-    <div id="summit-body">
+<div style="display: none!important;">
+    <div id="summit-body" style="padding: 15px">
+        <div class="form-native">
+            <svg t="1552465022197" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="8301"
+                 xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="200" class="icon icon-error">
+                <path d="M512.874667 938.474667c-235.434667 0-426.261333-190.848-426.261334-426.261334 0-235.434667 190.848-426.261333 426.261334-426.261333s426.261333 190.848 426.261333 426.261333c-0.021333 235.413333-190.848 426.261333-426.261333 426.261334z m0-85.248c188.352 0 341.013333-152.682667 341.013333-341.013334 0-188.352-152.661333-341.013333-341.013333-341.013333S171.861333 323.861333 171.861333 512.213333c0 188.330667 152.661333 341.013333 341.013334 341.013334z m-42.645334-511.530667a42.624 42.624 0 1 1 85.290667 0v204.586667a42.666667 42.666667 0 0 1-85.290667 0v-204.586667zM512.874667 725.333333a42.666667 42.666667 0 1 1 0.042666-85.290666A42.666667 42.666667 0 0 1 512.874667 725.333333z"
+                      fill="" p-id="8302"></path>
+            </svg>
+            <span>请勿发布涉及政治、广告、营销、翻墙、违反国家法律法规等内容，
+                <a target="_blank" href="https://blog.csdn.net/blogdevteam/article/details/103487074"
+                   style="color: rgb(51, 153, 234);">详见《CSDN资源共享规范》</a>
+            </span>
+        </div>
         提交内容
+        <div style="background-color: #00a8c6">
+            这里是发布文章的内容
+        </div>
     </div>
 </div>
 {# TODO 博客提交 #}
@@ -177,10 +221,10 @@
         layer = layui.layer;
         $('#id_submit').on('click', function () {
             layer.open({
-                title: '在线调试'
+                title: '发布文章'
                 , type: 1
-                , area: ['500px', '600px']
-                , content: $('#summit-body').innerHTML
+                , area: ['606px', '640px']
+                , content: $('#summit-body')[0].outerHTML
             });
         });
     });

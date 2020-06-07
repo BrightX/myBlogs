@@ -59,7 +59,7 @@ class ArticleSerializer(serializers.ModelSerializer):
         model = Article
         # fields = "__all__"  # 所有字段
         fields = ["title", "body", "user", "tags"]  # 指定字段
-        depth = 1  # 深度控制 自动化序列连表 建议值不要太大， 官网建议1~10 个人建议不多于3~4
+        depth = 1  # 深度控制 自动化序列连表 建议值不要太大， 官网建议1~10 个人建议不大于3~4
 
 
 # noinspection PyMethodMayBeStatic

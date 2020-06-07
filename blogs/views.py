@@ -29,28 +29,40 @@ from blogs.models import Tag, Category, Article
 #             })
 #         return ret
 
+# noinspection PyMethodMayBeStatic
+# class ArticleSerializer(serializers.ModelSerializer):
+#     body = serializers.CharField(source="content")  # 内容是content的
+#     user = serializers.CharField(source="user.username")  # ForeignKey 通过`.`进行访问相应属性或方法
+#     tags = serializers.SerializerMethodField()  # 自定义字段
+#
+#     def get_tags(self, row):  # 命名规则： get_+字段名
+#         tags_list = row.tags.all()
+#         ret = []
+#         for item in tags_list:
+#             ret.append({
+#                 "id": item.id,
+#                 "name": item.name,
+#             })
+#         return ret
+#
+#     class Meta:
+#         model = Article
+#         # fields = "__all__"  # 所有字段
+#         fields = ["title", "body", "user", "tags"]  # 指定字段
 
+
+# noinspection PyMethodMayBeStatic
 class ArticleSerializer(serializers.ModelSerializer):
     body = serializers.CharField(source="content")  # 内容是content的
-    user = serializers.CharField(source="user.username")  # ForeignKey 通过`.`进行访问相应属性或方法
-    tags = serializers.SerializerMethodField()  # 自定义字段
-
-    def get_tags(self, row):  # 命名规则： get_+字段名
-        tags_list = row.tags.all()
-        ret = []
-        for item in tags_list:
-            ret.append({
-                "id": item.id,
-                "name": item.name,
-            })
-        return ret
 
     class Meta:
         model = Article
         # fields = "__all__"  # 所有字段
         fields = ["title", "body", "user", "tags"]  # 指定字段
+        depth = 1  # 深度控制 自动化序列连表 建议值不要太大， 官网建议1~10 个人建议不多于3~4
 
 
+# noinspection PyMethodMayBeStatic
 class BlogsView(APIView):
     """ 博客视图类 """
 

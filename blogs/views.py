@@ -140,6 +140,7 @@ def tag_create(request, name: str) -> JsonResponse:
     return JsonResponse(data=data)
 
 
+# noinspection DuplicatedCode
 @login_required
 def tag_delete(request, tag_id: int) -> JsonResponse:
     """ 删除标签 """
@@ -165,6 +166,7 @@ def tag_delete(request, tag_id: int) -> JsonResponse:
     return JsonResponse(data=data)
 
 
+# noinspection DuplicatedCode
 @login_required
 def tag_update(request, tag_id: int, name: str) -> JsonResponse:
     """ 修改标签 """

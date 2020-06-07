@@ -2,6 +2,7 @@ Django~=2.2.11
 django-guardian~=2.2.0
 django-simple-captcha~=0.5.12
 djangorestframework
+django-redis~=4.12.1
 
 xadmin~=2.0.1
 # xadmin相关依赖

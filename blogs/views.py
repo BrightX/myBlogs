@@ -10,19 +10,29 @@ from rest_framework.views import APIView
 from blogs.models import Tag, Category, Article
 
 
-class ArticleSerializer(serializers.Serializer):
+# class ArticleSerializer(serializers.Serializer):
+#
+#     title = serializers.CharField()
+#     # content = serializers.CharField()
+#     body = serializers.CharField(source="content")  # 内容是content的，
+#     user = serializers.CharField(source="user.username")  # ForeignKey 通过`.`进行访问相应属性或方法
+#     # tags = serializers.CharField(source="tags.all")  # ManyToMany QuerySet 不那么详细 需要自定义
+#     tags = serializers.SerializerMethodField()  # 自定义字段
+#
+#     def get_tags(self, row):  # 命名规则： get_+字段名
+#         tags_list = row.tags.all()
+#         ret = []
+#         for item in tags_list:
+#             ret.append({
+#                 "id": item.id,
+#                 "name": item.name,
+#             })
+#         return ret
 
-    def update(self, instance, validated_data):
-        pass
 
-    def create(self, validated_data):
-        pass
-
-    title = serializers.CharField()
-    # content = serializers.CharField()
-    body = serializers.CharField(source="content")  # 内容是content的，
+class ArticleSerializer(serializers.ModelSerializer):
+    body = serializers.CharField(source="content")  # 内容是content的
     user = serializers.CharField(source="user.username")  # ForeignKey 通过`.`进行访问相应属性或方法
-    # tags = serializers.CharField(source="tags.all")  # ManyToMany QuerySet 不那么详细 需要自定义
     tags = serializers.SerializerMethodField()  # 自定义字段
 
     def get_tags(self, row):  # 命名规则： get_+字段名
@@ -34,6 +44,11 @@ class ArticleSerializer(serializers.Serializer):
                 "name": item.name,
             })
         return ret
+
+    class Meta:
+        model = Article
+        # fields = "__all__"  # 所有字段
+        fields = ["title", "body", "user", "tags"]  # 指定字段
 
 
 class BlogsView(APIView):

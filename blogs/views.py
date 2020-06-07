@@ -1,8 +1,71 @@
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
+from rest_framework import serializers
+from rest_framework.request import Request
+# from rest_framework.versioning import QueryParameterVersioning, URLPathVersioning
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from blogs.models import Tag, Category, Article
+
+
+class ArticleSerializer(serializers.Serializer):
+
+    def update(self, instance, validated_data):
+        pass
+
+    def create(self, validated_data):
+        pass
+
+    title = serializers.CharField()
+    # content = serializers.CharField()
+    body = serializers.CharField(source="content")  # 内容是content的，
+    user = serializers.CharField(source="user.username")  # ForeignKey
+    # tags = serializers.CharField(source="tags.all")  # ManyToMany QuerySet 不那么详细
+    tags = serializers.SerializerMethodField()  # 自定义字段
+
+    def get_tags(self, row):
+        tags_list = row.tags.all()
+        ret = []
+        for item in tags_list:
+            ret.append({
+                "id": item.id,
+                "name": item.name,
+            })
+        return ret
+
+
+class BlogsView(APIView):
+    """ 博客视图类 """
+
+    # versioning_class = QueryParameterVersioning
+    # versioning_class = URLPathVersioning
+
+    def get(self, request: Request, *args, **kwargs):
+        print(request.version)
+        print(request.data)  # POST 请求
+        print(request.query_params)  # GET 请求
+        # return HttpResponse("博客列表")
+        return Response(request.query_params)
+
+    def post(self, request: Request, *args, **kwargs):
+        print(request.version)
+        print(request.data)  # POST 请求
+        print(request.query_params)  # GET 请求
+        articles = Article.objects.all()
+        article = Article.objects.first()
+        blogs = ArticleSerializer(instance=articles, many=True)  # 多个对象
+        blog = ArticleSerializer(instance=article)  # 单个对象
+        print(blogs.data)
+        data = {
+            "code": 200,
+            "msg": "success",
+            "data": blogs.data,
+            "total": len(blogs.data),
+            "first": blog.data,
+        }
+        return Response(data=data)
 
 
 def detail(request, user_id: int, blog_id: int) -> HttpResponse:

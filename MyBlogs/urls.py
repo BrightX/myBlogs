@@ -15,7 +15,7 @@ Including another URLconf
 """
 import xadmin
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.views.generic import TemplateView, RedirectView
 from django.views.static import serve
 
@@ -27,7 +27,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('xadmin/', xadmin.site.urls),
     path('blog/', include('blogs.urls')),
-    path('captcha/', include('captcha.urls')),   # 图片验证码路由
+    path('captcha/', include('captcha.urls')),  # 图片验证码路由
     path('user/', include('users.urls')),
     path("media/<path:path>", serve, {"document_root": MEDIA_ROOT}),
+
+    re_path(r'^api/(?P<version>v\d+)/', include("MyBlogs.urls_api")),
 ]

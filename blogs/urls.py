@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, re_path
 from . import views
 
 app_name = 'blogs'
@@ -13,4 +13,6 @@ urlpatterns = [
     path('tagUpdate/<int:tag_id>/<str:name>', views.tag_update, name='tag_update'),
     path('tagIsExist/<str:name>', views.tag_is_exist, name='tag_is_exist'),
 
+    # API
+    path('list', views.BlogsView.as_view()),
 ]

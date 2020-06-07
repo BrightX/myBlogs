@@ -30,7 +30,7 @@ class Category(models.Model):
 
 
 class Article(models.Model):
-    """ 文章 """
+    """ 文章内容 """
     user = models.ForeignKey(to=User, on_delete=models.CASCADE, verbose_name='文章作者')
     title = models.CharField(max_length=100, verbose_name='文章标题')
     content = models.TextField(verbose_name='文章内容')
@@ -43,7 +43,21 @@ class Article(models.Model):
         return "%s: %s" % (self.user.username, self.title)
 
     class Meta:
-        verbose_name = '文章'
+        verbose_name = '文章内容'
+        verbose_name_plural = verbose_name
+
+
+class ArticlePlus(models.Model):
+    """ 文章附加信息 """
+    article = models.OneToOneField(Article, on_delete=models.CASCADE, verbose_name='文章内容')
+    page_view = models.BigIntegerField(default=0, verbose_name='浏览量')
+    thumb = models.BigIntegerField(default=0, verbose_name='点赞量')
+
+    def __str__(self):
+        return self.article.title
+
+    class Meta:
+        verbose_name = '文章附加信息'
         verbose_name_plural = verbose_name
 
 

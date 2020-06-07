@@ -1,7 +1,6 @@
 /.bash_history
 /venv/
 /.idea/
-__pycache__/
 *.pyc
 
 
@@ -111,3 +110,4 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+media/

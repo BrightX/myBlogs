@@ -1,7 +1,0 @@
-
-安装xadmin:
-    pip install https://codeload.github.com/sshwsfc/xadmin/zip/django2
-
-报错：TypeError: render() got an unexpected keyword argument 'renderer'
-    解决：修改`xadmin\views\dashboard.py`的`def render(self, name, value, attrs=None)`
-        为`def render(self, name, value, attrs=None, renderer=None)`

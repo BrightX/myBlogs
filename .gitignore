@@ -1,7 +1,8 @@
 /.bash_history
 /venv/
 /.idea/
-*.pyc
+!media/.keep
+media/
 
 
 # ========================== 以下是来自模板 =====================================
@@ -107,7 +108,3 @@ venv.bak/
 
 # mkdocs documentation
 /site
-
-# mypy
-.mypy_cache/
-media/

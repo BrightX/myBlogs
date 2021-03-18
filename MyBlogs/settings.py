@@ -28,25 +28,20 @@ ALLOWED_HOSTS = ['*']  # FIXME 项目部署的时候要修改成服务器的IP�
 
 # Application definition
 INSTALLED_APPS = [
+    'simpleui.apps.SimpleApp',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     'captcha',  # 登录注册验证码  pip install django-simple-captcha
     # 参考博客：https://blog.csdn.net/qq_37648632/article/details/83149803
     # 官方文档：https://django-simple-captcha.readthedocs.io/en/latest/
     'guardian',  # pip install django-guardian  对象级别的权限控制
     'rest_framework',  # django-rest-framework
-
     'blogs',
     'users',
-
-    'xadmin',  # xadmin后台管理
-    'crispy_forms',
-    'reversion',
 ]
 
 # 加入身份验证
@@ -115,7 +110,7 @@ REDIS_TIMEOUT = 7 * 24 * 60 * 60
 CUBES_REDIS_TIMEOUT = 60 * 60
 NEVER_REDIS_TIMEOUT = 365 * 24 * 60 * 60
 
-# 将Session 存放在缓存里
+# 将 Session 存放在缓存里
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
 
@@ -129,6 +124,7 @@ REST_FRAMEWORK = {
     # 默认渲染器
     "DEFAULT_RENDERER_CLASSES": [
         "rest_framework.renderers.JSONRenderer",
+        "rest_framework.renderers.BrowsableAPIRenderer",  # 生产环境可以注释掉
     ],
     # 默认解析器
     "DEFAULT_PARSER_CLASSES": [

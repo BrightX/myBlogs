@@ -69,14 +69,14 @@ class BlogsView(APIView):
     # versioning_class = QueryParameterVersioning
     # versioning_class = URLPathVersioning
 
-    def get(self, request: Request, *args, **kwargs):
+    def post(self, request: Request, *args, **kwargs):
         print(request.version)
         print(request.data)  # POST 请求
         print(request.query_params)  # GET 请求
         # return HttpResponse("博客列表")
         return Response(request.query_params)
 
-    def post(self, request: Request, *args, **kwargs):
+    def get(self, request: Request, *args, **kwargs):
         print(request.version)
         print(request.data)  # POST 请求
         print(request.query_params)  # GET 请求

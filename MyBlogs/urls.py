@@ -27,6 +27,7 @@ urlpatterns = [
     path('blog/', include('blogs.urls')),
     path('captcha/', include('captcha.urls')),  # 图片验证码路由
     path('user/', include('users.urls')),
+    path('user/', include('users.urls.password_url')),
     path("media/<path:path>", serve, {"document_root": MEDIA_ROOT}),
 
     re_path(r'^api/(?P<version>v\d+)/', include("MyBlogs.urls_api")),

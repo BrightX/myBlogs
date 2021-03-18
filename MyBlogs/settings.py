@@ -92,18 +92,23 @@ DATABASES = {
     }
 }
 
-# 使用Redis缓存 pip install django-redis
 CACHES = {
-    "default": {
+    # 使用 Redis 缓存 pip install django-redis
+    "redis": {
         "BACKEND": "django_redis.cache.RedisCache",
         "LOCATION": "redis://127.0.0.1:6379/1",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
             # "PASSWORD": "mysecret",
             "IGNORE_EXCEPTIONS": True,
-        }
-    }
+        },
+    },
+    # django 默认缓存
+    'spare': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',  # NOQA
+    },
 }
+CACHES['default'] = CACHES['spare']  # NOQA
 
 # 设置缓存默认过期时间（非必须)
 REDIS_TIMEOUT = 7 * 24 * 60 * 60
@@ -111,8 +116,8 @@ CUBES_REDIS_TIMEOUT = 60 * 60
 NEVER_REDIS_TIMEOUT = 365 * 24 * 60 * 60
 
 # 将 Session 存放在缓存里
-SESSION_ENGINE = "django.contrib.sessions.backends.cache"
-SESSION_CACHE_ALIAS = "default"
+# SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+# SESSION_CACHE_ALIAS = "default"
 
 REST_FRAMEWORK = {
     # 版本控制
@@ -131,6 +136,23 @@ REST_FRAMEWORK = {
         "rest_framework.parsers.JSONParser",
         "rest_framework.parsers.FormParser",
     ],
+}
+
+# Simple UI 相关设置  https://simpleui.88cto.com/docs/simpleui/QUICK.html#%E9%85%8D%E7%BD%AE
+SIMPLEUI_ANALYSIS = False  # 不收集分析信息
+SIMPLEUI_HOME_INFO = False  # 隐藏服务器信息
+SIMPLEUI_LOGIN_PARTICLES = False  # 关闭登录页粒子动画
+# SIMPLEUI_LOGO = '/static/logo.png'  # 后台站点 LOGO
+SIMPLEUI_ICON = {
+    # 后台界面图标
+    # https://fontawesome.com/icons?d=gallery
+    # http://www.fontawesome.com.cn/faicons/
+    # https://element.eleme.cn/#/zh-CN/component/icon
+    '博客管理': 'el-icon-folder-opened',
+    '文章内容': 'el-icon-document',
+    '文章标签': 'el-icon-collection-tag',
+    '文章分类': 'el-icon-files',
+    '文章评论与回复': 'el-icon-chat-dot-round',
 }
 
 # Password validation

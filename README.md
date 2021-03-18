@@ -4,7 +4,7 @@
 
 ## 项目环境
 
-* `Python` 3.7 
+* `Python` 3.7+ 
 
 * `Django` 2.2
 * `django-guardian` 对象级别权限管理

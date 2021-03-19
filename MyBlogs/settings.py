@@ -141,7 +141,7 @@ REST_FRAMEWORK = {
 # Simple UI 相关设置  https://simpleui.88cto.com/docs/simpleui/QUICK.html#%E9%85%8D%E7%BD%AE
 SIMPLEUI_ANALYSIS = False  # 不收集分析信息
 SIMPLEUI_HOME_INFO = False  # 隐藏服务器信息
-SIMPLEUI_LOGIN_PARTICLES = False  # 关闭登录页粒子动画
+SIMPLEUI_LOGIN_PARTICLES = True  # 登录页粒子动画
 # SIMPLEUI_LOGO = '/static/logo.png'  # 后台站点 LOGO
 SIMPLEUI_ICON = {
     # 后台界面图标
